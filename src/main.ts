@@ -3,38 +3,37 @@ import { BlogUser } from './models/users.model';
 import { app as PostRouter } from './routes/posts.route'
 import {app as UserRoute, listOfUsers} from './routes/users.route';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 let app = express();
 app.use(express.json());
 app.use('/', (req,res,next)=>{
   if(req.headers['authorization'])
   {
-    let userInfo = req.headers['authorization'].split(' ')[1]; //Base 64 Encoded
-    let decodedUserInfo = atob(userInfo);
-    let userName= decodedUserInfo.split(':')[0];
-    let password= decodedUserInfo.split(':')[1];
-    let foundUser:BlogUser|undefined=undefined;
-    for(let u of listOfUsers)
+    let header = req.headers['authorization'];
+    if(header.includes('Bearer'))
     {
-      if(u.userName==userName)
+      let token = header.split(' ')[1];
+      try
       {
-        foundUser=u;
-        break;
+        let payload = jwt.verify(token,'SECREETKEY') as any;
+        res.setHeader('loggedinuser',payload.username);
+        next();
       }
+      catch(e)
+      {
+        res.status(401).send({message:'Cant hack me!'});
+      }
+
+      
     }
-    if(foundUser==undefined)
+    else if(header.includes('Basic') && req.url=='/Login')
     {
-      res.status(401).send({message:'Invalid Username'});
+      next();
     }
-    else{
-      bcrypt.compare(password,foundUser.password,(err,result)=>{
-        if(result)
-        {
-          next();
-        }
-        else
-          res.status(401).send({message:'Password'});
-      })
+    else
+    {
+      res.status(401).send({message:'Cant hack me!'});
     }
   }
   else

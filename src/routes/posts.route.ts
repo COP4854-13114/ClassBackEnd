@@ -11,26 +11,17 @@ app.get('/', (req,res,next)=>{
 
 app.post('/', (req,res,next)=>{
 
-    if(req.headers['authorization'])
+    let loggedinuser = res.getHeader('loggedinuser')
+    if(loggedinuser) // Are they logged in?
     {
-        
-        
-        let userValid=false;
-        if(userValid)
-        {
             let newPost = new Post();
             
             Object.assign(newPost, req.body);
             newPost.posted_date = new Date();
             newPost.id =Date.now();
-            newPost.post_by = '';
+            newPost.post_by = loggedinuser.toString();
             listOfPosts.push(newPost);
             res.status(201).send(newPost);
-        }
-        else
-        {
-            res.status(401).send({message:'Back Hacker Go AwAY!'});
-        }
     }
     else
     {
