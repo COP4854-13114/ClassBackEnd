@@ -27,7 +27,7 @@ app.use('/', (req,res,next)=>{
 
       
     }
-    else if(header.includes('Basic') && req.url=='/Login')
+    else if(header.includes('Basic') && req.url=='/users/Login')
     {
       next();
     }
