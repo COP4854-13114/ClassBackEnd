@@ -1,15 +1,23 @@
+import { PrismaClient } from "@prisma/client";
 import { Router } from "express";
+import { AuthChecker } from "../auth/auth.utils";
 import { Post } from "../models/posts.model";
 import { BlogUser } from "../models/users.model";
 let app = Router();
 let listOfPosts:Post[]=[];
+const prisma = new PrismaClient();
 
-
-app.get('/', (req,res,next)=>{
-    res.status(200).send(listOfPosts);
+app.get('/', async(req,res,next)=>{
+    /*prisma.post.findMany(
+        {
+            where:{
+                id> 0
+            }
+        }
+    )*/
 });
 
-app.post('/', (req,res,next)=>{
+app.post('/', AuthChecker, (req,res,next)=>{
 
     let loggedinuser = res.getHeader('loggedinuser')
     if(loggedinuser) // Are they logged in?

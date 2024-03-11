@@ -3,13 +3,15 @@ import { BlogUser } from "../models/users.model";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { PrismaClient } from "@prisma/client";
+import { AuthChecker } from "../auth/auth.utils";
+
 const saltRounds =10;
 const prisma = new PrismaClient();
 
 let listOfUsers:BlogUser[]=[];
 
  let app = Router();
- app.post('/Login', async (req,res,next)=>{
+ app.post('/Login', AuthChecker, async (req,res,next)=>{
   if(req.headers['authorization'])
   {
     let userInfo = req.headers['authorization'].split(' ')[1]; //Base 64 Encoded
