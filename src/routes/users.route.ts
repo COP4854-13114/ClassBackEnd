@@ -30,7 +30,7 @@ let listOfUsers:BlogUser[]=[];
         bcrypt.compare(password,userFound.password,(err,result)=>{
           if(result)
           {
-            let token = jwt.sign({username:userFound.userName,  exp: Math.floor(Date.now() / 1000) + (60)},'SECREETKEY');
+            let token = jwt.sign({username:userFound.userName},'SECREETKEY');
             res.status(200).send({token:token});
           }
           else

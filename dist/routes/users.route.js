@@ -29,7 +29,7 @@ app.post('/Login', auth_utils_1.AuthChecker, async (req, res, next) => {
             if (userFound) {
                 bcrypt_1.default.compare(password, userFound.password, (err, result) => {
                     if (result) {
-                        let token = jsonwebtoken_1.default.sign({ username: userFound.userName, exp: Math.floor(Date.now() / 1000) + (60) }, 'SECREETKEY');
+                        let token = jsonwebtoken_1.default.sign({ username: userFound.userName }, 'SECREETKEY');
                         res.status(200).send({ token: token });
                     }
                     else

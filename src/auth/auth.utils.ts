@@ -17,17 +17,19 @@ let AuthChecker = (req:Request,res:Response,next:NextFunction)=>
         }
         catch(e)
         {
+            console.log(e);
           res.status(401).send({message:'Cant hack me!'});
         }
   
         
       }
-      else if(header.includes('Basic') && req.url=='/users/Login')
+      else if(header.includes('Basic') && req.url=='/Login')
       {
         next();
       }
       else
       {
+        console.log(req.url);
         res.status(401).send({message:'Cant hack me!'});
       }
     }
